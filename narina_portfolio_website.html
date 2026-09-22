@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narina | Human-Centered Design & UX Engineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#111827',
+                            900: '#0f172a',
+                            950: '#090d16',
+                        },
+                        indigo: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                        },
+                        violet: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome icons for UI visuals -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
+                    N
+                </div>
+                <div>
+                    <span class="font-bold text-lg text-white block leading-tight">Narina</span>
+                    <span class="text-xs text-slate-400 block font-normal">Philbert Manuel Raj Stephen</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#work" class="text-slate-300 hover:text-indigo-400 transition-colors">Featured Work</a>
+                <a href="#skills" class="text-slate-300 hover:text-indigo-400 transition-colors">Capabilities</a>
+                <a href="#philosophy" class="text-slate-300 hover:text-indigo-400 transition-colors">Philosophy</a>
+                <a href="#contact" class="text-slate-300 hover:text-indigo-400 transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="downloadResume()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-download text-indigo-400"></i> Resume
+                </button>
+                <a href="#contact" class="px-5 py-2 rounded-lg text-xs font-semibold bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-500/25 hover:opacity-95 transition-all">
+                    Let's Connect
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-800 bg-slate-900/95 backdrop-blur-xl px-6 py-6 space-y-4">
+            <a href="#work" class="block text-slate-200 text-base py-1 hover:text-indigo-400" onclick="toggleMobileMenu()">Featured Work</a>
+            <a href="#skills" class="block text-slate-200 text-base py-1 hover:text-indigo-400" onclick="toggleMobileMenu()">Capabilities</a>
+            <a href="#philosophy" class="block text-slate-200 text-base py-1 hover:text-indigo-400" onclick="toggleMobileMenu()">Philosophy</a>
+            <a href="#contact" class="block text-slate-200 text-base py-1 hover:text-indigo-400" onclick="toggleMobileMenu()">Contact</a>
+            <div class="pt-4 border-t border-slate-800 flex flex-col gap-3">
+                <button onclick="downloadResume()" class="w-full py-2.5 rounded-lg text-sm font-semibold bg-slate-800 text-slate-200 border border-slate-700 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-indigo-400"></i> Resume
+                </button>
+                <a href="#contact" onclick="toggleMobileMenu()" class="w-full py-2.5 text-center rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-violet-600 text-white">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-36 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+        <!-- Background decorative ambient blur -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-indigo-600/15 rounded-full blur-[140px] pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[350px] h-[350px] bg-violet-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Human-Centered Design Student & UX Engineer
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-6">
+                    Designing accessible, <span class="gradient-text">cognitive-ergonomic</span> interfaces & systems.
+                </h1>
+
+                <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-normal mb-8 max-w-2xl">
+                    I am <strong class="text-white font-semibold">Narina (Philbert Manuel Raj Stephen)</strong>. I specialize in bridging complex software workflows, adaptive gaming HUDs, accessibility standards, and calm haptic interaction design.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#work" class="px-6 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                        <span>Explore Featured Work</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="#contact" class="px-6 py-3.5 rounded-xl font-semibold text-sm bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-600 transition-all">
+                        Get in Touch
+                    </a>
+                </div>
+
+                <!-- Quick info highlights -->
+                <div class="mt-16 pt-10 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-3 gap-6">
+                    <div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Core Focus</div>
+                        <div class="text-sm font-semibold text-slate-200">UX & Cognitive Ergonomics</div>
+                    </div>
+                    <div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Methodology</div>
+                        <div class="text-sm font-semibold text-slate-200">Nielsen's Heuristics & Universal Access</div>
+                    </div>
+                    <div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Key Domain</div>
+                        <div class="text-sm font-semibold text-slate-200">Interactive Systems & Hardware</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="work" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">Portfolio Showcase</h2>
+                    <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Interactive Case Studies</p>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex flex-wrap gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800" id="filterContainer">
+                    <button onclick="filterProjects('all')" class="filter-btn active-filter px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm" data-filter="all">All Projects</button>
+                    <button onclick="filterProjects('ux-ui')" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all" data-filter="ux-ui">UX/UI</button>
+                    <button onclick="filterProjects('accessibility')" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all" data-filter="accessibility">Accessibility</button>
+                    <button onclick="filterProjects('ambient')" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all" data-filter="ambient">Ambient / Hardware</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projectsGrid">
+
+                <!-- Project 1 Card -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 border border-slate-800 flex flex-col group" data-category="ux-ui accessibility">
+                    <div class="h-48 bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 p-6 relative flex flex-col justify-between overflow-hidden border-b border-slate-800/80">
+                        <div class="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                Adaptive Game UI
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono"><i class="fa-solid fa-gamepad text-indigo-400"></i></span>
+                        </div>
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">Cognitive Load Dashboard</h3>
+                            <p class="text-xs text-slate-400 mt-1">Predictive HUD for Complex RPGs</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                            Adaptive UI overlay framework designed to minimize UI clutter and cognitive fatigue during high-information gameplay like Skyrim and Path of Exile.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Contextual Triggers</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Nielsen Heuristics</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">High-Contrast</span>
+                            </div>
+                            <button onclick="openModal('project1')" class="w-full py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 hover:border-indigo-500 transition-all flex items-center justify-center gap-2">
+                                <span>Read Case Study</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 Card -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 border border-slate-800 flex flex-col group" data-category="accessibility ux-ui">
+                    <div class="h-48 bg-gradient-to-br from-violet-950 via-slate-900 to-slate-950 p-6 relative flex flex-col justify-between overflow-hidden border-b border-slate-800/80">
+                        <div class="absolute inset-0 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:16px_16px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                                Inclusive Ergonomics
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono"><i class="fa-solid fa-shoe-prints text-violet-400"></i></span>
+                        </div>
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white group-hover:text-violet-300 transition-colors">Adaptive Footwear Sprint</h3>
+                            <p class="text-xs text-slate-400 mt-1">Physical & Digital Accessibility</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                            End-to-end design sprint conceptualizing adaptive footwear solutions for individuals with limited foot and hand mobility, featuring dynamic entry mechanisms.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Usability Protocol</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Hands-Free Entry</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">User Journey</span>
+                            </div>
+                            <button onclick="openModal('project2')" class="w-full py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-violet-600 text-slate-200 hover:text-white border border-slate-700 hover:border-violet-500 transition-all flex items-center justify-center gap-2">
+                                <span>Read Case Study</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 Card -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 border border-slate-800 flex flex-col group" data-category="ambient">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 p-6 relative flex flex-col justify-between overflow-hidden border-b border-slate-800/80">
+                        <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                Haptic UX & Wearable
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono"><i class="fa-solid fa-wave-square text-emerald-400"></i></span>
+                        </div>
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors">Screen-Free Haptic Wearable</h3>
+                            <p class="text-xs text-slate-400 mt-1">Ambient Interaction & Calm Tech</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                            Wearable hardware and UX concept delivering calm, screen-free micro-moments of reflection and mindfulness through subtle customized haptic vibration patterns.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Haptic Rhythm</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Calm Tech</span>
+                                <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Hardware PRD</span>
+                            </div>
+                            <button onclick="openModal('project3')" class="w-full py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white border border-slate-700 hover:border-emerald-500 transition-all flex items-center justify-center gap-2">
+                                <span>Read Case Study</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Capabilities Section -->
+    <section id="skills" class="py-20 bg-slate-900/60 border-y border-slate-800/80 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mb-12">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">Technical Toolkit</h2>
+                <p class="text-3xl font-bold text-white tracking-tight">Skills & Capabilities</p>
+            </div>
+
+            <!-- Skills Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Category 1 -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-indigo-500/40 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">UX Research & Heuristics</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-indigo-400"></i> Jakob Nielsen's Evaluation</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-indigo-400"></i> Cognitive Task Analysis</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-indigo-400"></i> Qualitative Usability Protocol</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-indigo-400"></i> User Journey Mapping</li>
+                    </ul>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-violet-500/40 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">Prototyping & Code</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-violet-400"></i> Figma Interactive Systems</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-violet-400"></i> Visual Studio Code & HTML/CSS</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-violet-400"></i> JavaScript Front-End Logic</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-violet-400"></i> Git & Version Control</li>
+                    </ul>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/40 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-universal-access"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">Accessibility & Inclusion</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-emerald-400"></i> WCAG 2.1 Standard Compliance</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-emerald-400"></i> Screen Reader Auditing</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-emerald-400"></i> High-Contrast Color Systems</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-emerald-400"></i> Physical Motor Inclusion</li>
+                    </ul>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-amber-500/40 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-hand"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">Human Factors & Hardware</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-amber-400"></i> Cognitive Ergonomics</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-amber-400"></i> Haptic Pattern Vocabulary</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-amber-400"></i> Calm Technology Design</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-xs text-amber-400"></i> Hardware PRDs & Specs</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me / Design Philosophy -->
+    <section id="philosophy" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 space-y-6">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400">Design Philosophy</h2>
+                    <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
+                        Reducing friction, respecting attention, and empowering every human touchpoint.
+                    </h3>
+                    
+                    <p class="text-slate-300 leading-relaxed text-base">
+                        As a Human-Centered Design student and UX Engineer, my work centers on the principle that digital and physical tools should dynamically adapt to human limits—not force humans to adapt to technology.
+                    </p>
+
+                    <p class="text-slate-300 leading-relaxed text-base">
+                        Combining Nielsen’s classic usability heuristics with cognitive ergonomics, I design predictive gaming overlays that prevent information overload during fast-paced combat, develop hands-free footwear entries for mobility constraints, and design screen-free haptic feedback systems that preserve mental focus.
+                    </p>
+
+                    <div class="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-indigo-400 font-bold mb-1"><i class="fa-solid fa-microchip mr-2"></i>Calm Technology</div>
+                            <div class="text-xs text-slate-400">Designing interfaces that inform without overwhelming or demanding constant attention.</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-violet-400 font-bold mb-1"><i class="fa-solid fa-eye mr-2"></i>Ergonomic Scannability</div>
+                            <div class="text-xs text-slate-400">Hierarchical visual structures optimized for quick cognitive processing under stress.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Focus Card -->
+                <div class="lg:col-span-5">
+                    <div class="glass-panel p-8 rounded-3xl border border-slate-800 relative gradient-border">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                                <i class="fa-solid fa-user-astronaut"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Narina</h4>
+                                <p class="text-xs text-indigo-300">Philbert Manuel Raj Stephen</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-sm text-slate-300 border-t border-slate-800/80 pt-6">
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400">Degree</span>
+                                <span class="font-medium text-white">Human-Centered Design</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400">Core Specialty</span>
+                                <span class="font-medium text-white">UX Engineering & Accessibility</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400">Location</span>
+                                <span class="font-medium text-white">Open to Remote / Relocation</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Connect with me</span>
+                            <div class="flex items-center gap-3">
+                                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white flex items-center justify-center transition-all">
+                                    <i class="fa-brands fa-github text-sm"></i>
+                                </a>
+                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white flex items-center justify-center transition-all">
+                                    <i class="fa-brands fa-linkedin-in text-sm"></i>
+                                </a>
+                                <a href="mailto:contact@example.com" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-envelope text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Contact Form Section -->
+    <section id="contact" class="py-20 bg-slate-900/60 border-t border-slate-800/80 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">Get In Touch</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Let's Collaborate</p>
+                <p class="text-slate-400 text-sm mt-3 max-w-lg mx-auto">
+                    Have a project in mind, UX feedback, or an opportunity in accessible design and product development? Send a message below.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 sm:p-10 rounded-3xl border border-slate-800 shadow-xl">
+                <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Your Name *</label>
+                            <input type="text" id="name" required placeholder="Jane Doe" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Email Address *</label>
+                            <input type="email" id="email" required placeholder="jane@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Subject</label>
+                        <input type="text" id="subject" placeholder="UX Design Collaboration / Project Opportunity" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm">
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Message *</label>
+                        <textarea id="message" rows="4" required placeholder="Tell me about your project, ideas, or timeline..." class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm resize-none"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                        <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+
+                        <button type="button" onclick="downloadResume()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-arrow-down text-indigo-400"></i> Download Full Resume
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800/80 bg-slate-950 text-slate-500 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                &copy; 2026 Narina (Philbert Manuel Raj Stephen). Built with dynamic UI & human-centered ethics.
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#hero" class="hover:text-slate-300 transition-colors">Back to top</a>
+                <a href="https://github.com" target="_blank" class="hover:text-slate-300 transition-colors">GitHub</a>
+                <a href="https://linkedin.com" target="_blank" class="hover:text-slate-300 transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Case Study Detail Modal -->
+    <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel w-full max-w-3xl max-h-[90vh] rounded-3xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-all duration-300" id="modalContainer">
+            
+            <!-- Modal Header -->
+            <div class="p-6 sm:p-8 border-b border-slate-800 flex justify-between items-start bg-slate-900/90" id="modalHeader">
+                <div>
+                    <span id="modalCategory" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        Category
+                    </span>
+                    <h2 id="modalTitle" class="text-2xl sm:text-3xl font-bold text-white mt-2">Project Title</h2>
+                    <p id="modalSubtitle" class="text-xs text-slate-400 mt-1">Subtitle</p>
+                </div>
+                <button onclick="closeModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 sm:p-8 overflow-y-auto space-y-6 text-slate-300 text-sm leading-relaxed" id="modalBody">
+                <!-- Injected dynamically via JS -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-slate-800 bg-slate-900/90 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition-all">
+                    Close Case Study
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-panel px-5 py-3.5 rounded-xl border border-emerald-500/30 bg-slate-900/95 text-emerald-400 text-xs font-semibold flex items-center gap-3 shadow-2xl">
+        <i class="fa-solid fa-circle-check text-base"></i>
+        <span id="toastMessage">Message sent successfully!</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Project Details Data Store
+        const projectData = {
+            project1: {
+                category: "Predictive Game UI & Accessibility",
+                badgeClass: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+                title: "The Cognitive Load Dashboard for Gamers",
+                subtitle: "Reducing interface clutter & mental fatigue in complex RPGs",
+                content: `
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">Problem Statement</h4>
+                        <p class="text-slate-300">
+                            Modern ARPGs and complex RPGs like <em>Path of Exile</em> and <em>Skyrim</em> present excessive telemetry (buff counters, cooldown timers, mini-maps, quest targets, and dynamic health triggers) concurrently. During high-intensity combat, this creates intense visual clutter and cognitive fatigue for gamers—especially neurodivergent or motor-impaired players.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4">
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-indigo-400 font-bold text-lg">-42%</div>
+                            <div class="text-[11px] text-slate-400">Visual Search Fatigue</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-indigo-400 font-bold text-lg">100%</div>
+                            <div class="text-[11px] text-slate-400">WCAG High Contrast Compliant</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-indigo-400 font-bold text-lg">&lt; 50ms</div>
+                            <div class="text-[11px] text-slate-400">Contextual Trigger Latency</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">UX Methodology & Deliverables</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                            <li><strong>Dynamic UI Filtering:</strong> Developed automated contextual triggers that automatically suppress secondary menus and inventory telemetry during high-stress combat, leaving only immediate threat indicators.</li>
+                            <li><strong>Nielsen's Heuristic Inventory Redesign:</strong> Re-structured complex skill tree overlays into micro-hierarchical, scannable accordions applying Nielsen's rule of <em>Recognition over Recall</em>.</li>
+                            <li><strong>Customizable Screen-Reader & Audio State Cues:</strong> Embedded synthetic audio notifications for critical game states (low health, skill ready) to reduce visual reliance.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-2">
+                        <h4 class="text-base font-bold text-white mb-2">Impact & Takeaways</h4>
+                        <p class="text-slate-300">
+                            The framework demonstrated a significant reduction in reaction latency and cognitive overhead during playtests with gamers who experience attention fatigue or low sensory threshold.
+                        </p>
+                    </div>
+                `
+            },
+            project2: {
+                category: "Physical & Digital Inclusive Design",
+                badgeClass: "bg-violet-500/20 text-violet-300 border-violet-500/30",
+                title: "Adaptive Footwear Mobility Sprint",
+                subtitle: "Empowering individuals with limited foot and hand mobility",
+                content: `
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">Problem Statement</h4>
+                        <p class="text-slate-300">
+                            Traditional footwear designs rely heavily on complex manual lacing and physical dexterity, creating significant barriers for individuals with arthritis, tremors, stroke recovery, or lower limb mobility restrictions.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4">
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-violet-400 font-bold text-lg">&lt; 5 sec</div>
+                            <div class="text-[11px] text-slate-400">Hands-Free Entry Time</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-violet-400 font-bold text-lg">0</div>
+                            <div class="text-[11px] text-slate-400">Manual Lacing Required</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-violet-400 font-bold text-lg">100%</div>
+                            <div class="text-[11px] text-slate-400">Qualitative Satisfaction Rate</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">Design Sprint Key Steps</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                            <li><strong>Inclusive Usability Testing Protocol:</strong> Built a specialized qualitative evaluation protocol mapping pain points across bending angles, grip tension, and entry force.</li>
+                            <li><strong>Hands-Free Entry Dynamic Tensioning:</strong> Conceptualized a magnetic-pivot entry heel that locks securely without requiring upper body bending.</li>
+                            <li><strong>Ergonomic User Journey Mapping:</strong> Designed end-to-end digital and physical user journeys detailing unboxing, fit customization, and wearability.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-2">
+                        <h4 class="text-base font-bold text-white mb-2">Outcomes</h4>
+                        <p class="text-slate-300">
+                            Delivered a complete accessibility presentation deck, ergonomic models, and physical product requirements that dramatically streamline everyday footwear entry for users with physical disabilities.
+                        </p>
+                    </div>
+                `
+            },
+            project3: {
+                category: "Ambient Interaction & Haptic UX",
+                badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+                title: "Screen-Free Haptic Reflection Wearable",
+                subtitle: "Calm mindfulness micro-moments through quiet touch feedback",
+                content: `
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">Problem Statement</h4>
+                        <p class="text-slate-300">
+                            Constant digital screens and intrusive push notifications lead to severe cognitive fragmentation and screen fatigue. Existing smartwatches often worsen distraction by displaying dense notifications on small screens.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4">
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-emerald-400 font-bold text-lg">0 Screen</div>
+                            <div class="text-[11px] text-slate-400">Zero Visual Intrusion</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-emerald-400 font-bold text-lg">6 Cues</div>
+                            <div class="text-[11px] text-slate-400">Distinct Haptic Vocabulary</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="text-emerald-400 font-bold text-lg">Calm Tech</div>
+                            <div class="text-[11px] text-slate-400">Ambient Integration</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2">Key Deliverables & Innovations</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                            <li><strong>Haptic Vibration Vocabulary:</strong> Designed a subtle rhythm, frequency, and intensity scale for notifications (breathing prompts, time reflection, calm reminders) without sound or visual glare.</li>
+                            <li><strong>Hardware Interaction PRD:</strong> Developed detailed hardware requirement specifications, user interaction states, and gesture triggers.</li>
+                            <li><strong>Calm Technology Integration:</strong> Applied Weiser and Brown's calm tech principles ensuring the device resides in the user's periphery until explicitly needed.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-2">
+                        <h4 class="text-base font-bold text-white mb-2">Takeaway</h4>
+                        <p class="text-slate-300">
+                            A showcase of how non-visual physical UI can guide user reflection and habit change while honoring mental privacy and focus.
+                        </p>
+                    </div>
+                `
+            }
+        };
+
+        // Modal Functionality
+        function openModal(projectId) {
+            const data = projectData[projectId];
+            if (!data) return;
+
+            const categoryEl = document.getElementById('modalCategory');
+            categoryEl.textContent = data.category;
+            categoryEl.className = `px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${data.badgeClass}`;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalBody').innerHTML = data.content;
+
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+
+            container.classList.remove('scale-95');
+            container.classList.add('scale-100');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on click outside box
+        document.getElementById('projectModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Filter Functionality
+        function filterProjects(filter) {
+            const cards = document.querySelectorAll('.project-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-filter') === filter) {
+                    btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            cards.forEach(card => {
+                const categories = card.getAttribute('data-category');
+                if (filter === 'all' || categories.includes(filter)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+        // Form Submit Handler & Toast
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            
+            showToast(`Thank you, ${name}! Your message has been sent.`);
+            document.getElementById('contactForm').reset();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 4000);
+        }
+
+        // Resume download simulation
+        function downloadResume() {
+            const sampleContent = `
+NARINA (Philbert Manuel Raj Stephen)
+Human-Centered Design Student & UX Engineer
+Focus: Cognitive Ergonomics, WCAG Accessibility, Adaptive Game UI, Calm Hardware Systems
+
+PROJECTS:
+1. The Cognitive Load Dashboard for Gamers (Adaptive Game UI)
+2. Adaptive Footwear Mobility Sprint (Inclusive Physical/Digital UX)
+3. Screen-Free Haptic Reflection Wearable (Ambient UX & Calm Tech)
+
+SKILLS:
+- UX Research & Heuristic Evaluation (Nielsen Heuristics)
+- Accessibility & WCAG 2.1 Standards
+- Figma, Prototyping, Front-End Code (HTML/CSS/JS, VS Code)
+- Cognitive Ergonomics & Hardware Interaction PRDs
+            `;
+            
+            const blob = new Blob([sampleContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Narina_Philbert_UX_Resume.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            showToast("Resume downloaded successfully!");
+        }
+
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
